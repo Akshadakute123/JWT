@@ -1,11 +1,12 @@
-package com.bezkoder.springjwt.controllers;
+
+package com.khelomore.jwt.controllers;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +21,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bezkoder.springjwt.models.ERole;
-import com.bezkoder.springjwt.models.Role;
-import com.bezkoder.springjwt.models.User;
-import com.bezkoder.springjwt.payload.request.LoginRequest;
-import com.bezkoder.springjwt.payload.request.SignupRequest;
-import com.bezkoder.springjwt.payload.response.JwtResponse;
-import com.bezkoder.springjwt.payload.response.MessageResponse;
-import com.bezkoder.springjwt.repository.RoleRepository;
-import com.bezkoder.springjwt.repository.UserRepository;
-import com.bezkoder.springjwt.security.jwt.JwtUtils;
-import com.bezkoder.springjwt.security.services.UserDetailsImpl;
+import com.khelomore.jwt.models.ERole;
+import com.khelomore.jwt.models.Role;
+import com.khelomore.jwt.models.User;
+import com.khelomore.jwt.payload.request.LoginRequest;
+import com.khelomore.jwt.payload.request.SignupRequest;
+import com.khelomore.jwt.payload.response.JwtResponse;
+import com.khelomore.jwt.payload.response.MessageResponse;
+import com.khelomore.jwt.repository.RoleRepository;
+import com.khelomore.jwt.repository.UserRepository;
+import com.khelomore.jwt.security.jwt.JwtUtils;
+import com.khelomore.jwt.security.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -52,28 +53,56 @@ public class AuthController {
 	JwtUtils jwtUtils;
 
 	@PostMapping("/signin")
-	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<?> authenticateUser( @RequestBody LoginRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		String jwt = jwtUtils.generateJwtToken(authentication);
-		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
-
+             
 		return ResponseEntity.ok(new JwtResponse(jwt, 
 												 userDetails.getId(), 
 												 userDetails.getUsername(), 
 												 userDetails.getEmail(), 
 												 roles));
 	}
+	
+	
+//	@PostMapping("/signin")
+//	public ResponseEntity<?> authenticateUsers( @RequestBody SignupRequest loginRequest) {
+////        if(loginRequest.getMobilenumber())
+//		
+//		Optional<User>newlogin=userRepository.findBymobilenumber(loginRequest.getMobilenumber());
+//		
+//		if(newlogin.isPresent())
+//		{
+//			
+//				
+//		
+//		Authentication authentication = authenticationManager.authenticate(
+//				
+//				new 
+//				UsernamePasswordAuthenticationToken(loginRequest.getMobilenumber(),null));
+//		SecurityContextHolder.getContext().setAuthentication(authentication);
+//		String jwt = jwtUtils.generateJwtToken(authentication);
+//		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
+//		List<String> roles = newlogin.getAuthorities().stream()
+//				.map(item -> item.getAuthority())
+//				.collect(Collectors.toList());
+//             
+//		return ResponseEntity.ok(new JwtResponse(jwt, 
+//												 userDetails.getId(), 
+//												 userDetails.getUsername(), 
+//												 userDetails.getEmail(), 
+//												 roles));
+//	}
 
 	@PostMapping("/signup")
-	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+	public ResponseEntity<?> registerUser( @RequestBody SignupRequest signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 			return ResponseEntity
 					.badRequest()
@@ -88,8 +117,11 @@ public class AuthController {
 
 		// Create new user's account
 		User user = new User(signUpRequest.getUsername(), 
-							 signUpRequest.getEmail(),
-							 encoder.encode(signUpRequest.getPassword()));
+							 
+							 signUpRequest.getMobilenumber(),
+							
+							 encoder.encode(signUpRequest.getPassword()),
+							 signUpRequest.getEmail());
 
 		Set<String> strRoles = signUpRequest.getRole();
 		Set<Role> roles = new HashSet<>();

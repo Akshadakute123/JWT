@@ -1,4 +1,4 @@
-package com.bezkoder.springjwt.security.jwt;
+package com.khelomore.jwt.security.jwt;
 
 import java.util.Date;
 
@@ -8,7 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.bezkoder.springjwt.security.services.UserDetailsImpl;
+import com.khelomore.jwt.security.services.UserDetailsImpl;
+
 import io.jsonwebtoken.*;
 
 @Component
@@ -26,13 +27,14 @@ public class JwtUtils {
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
 		return Jwts.builder()
-				.setSubject((userPrincipal.getUsername()))
+				.setSubject((userPrincipal.getMobilenumber()))
 				.setIssuedAt(new Date())
 				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
 				.signWith(SignatureAlgorithm.HS512, jwtSecret)
 				.compact();
 	}
 
+	
 	public String getUserNameFromJwtToken(String token) {
 		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
 	}

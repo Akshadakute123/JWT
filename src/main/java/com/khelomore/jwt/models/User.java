@@ -1,12 +1,9 @@
-package com.bezkoder.springjwt.models;
+package com.khelomore.jwt.models;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(	name = "users", 
@@ -19,17 +16,14 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank
-	@Size(max = 20)
+	
+	
 	private String username;
 
-	@NotBlank
-	@Size(max = 50)
-	@Email
+	
 	private String email;
 
-	@NotBlank
-	@Size(max = 120)
+	private String mobilenumber;
 	private String password;
 
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -41,10 +35,21 @@ public class User {
 	public User() {
 	}
 
-	public User(String username, String email, String password) {
+	public User(String username, String mobilenumber, String password,String email) {
 		this.username = username;
-		this.email = email;
+		this.mobilenumber=mobilenumber;
+		
 		this.password = password;
+		this.email = email;
+	}
+	
+
+	public String getMobilenumber() {
+		return mobilenumber;
+	}
+
+	public void setMobilenumber(String mobilenumber) {
+		this.mobilenumber = mobilenumber;
 	}
 
 	public Long getId() {

@@ -1,4 +1,4 @@
-package com.bezkoder.springjwt.security.services;
+package com.khelomore.jwt.security.services;
 
 import java.util.Collection;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.bezkoder.springjwt.models.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.khelomore.jwt.models.User;
 
 public class UserDetailsImpl implements UserDetails {
 	private static final long serialVersionUID = 1L;
@@ -18,7 +18,7 @@ public class UserDetailsImpl implements UserDetails {
 	private Long id;
 
 	private String username;
-
+    private String mobilenumber;
 	private String email;
 
 	@JsonIgnore
@@ -26,13 +26,14 @@ public class UserDetailsImpl implements UserDetails {
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserDetailsImpl(Long id, String username, String email, String password,
+	public UserDetailsImpl(Long id, String username, String email, String password,String mobilenumber,
 			Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
+		this.mobilenumber=mobilenumber;
 	}
 
 	public static UserDetailsImpl build(User user) {
@@ -45,6 +46,7 @@ public class UserDetailsImpl implements UserDetails {
 				user.getUsername(), 
 				user.getEmail(),
 				user.getPassword(), 
+		user.getMobilenumber(),
 				authorities);
 	}
 
@@ -79,6 +81,14 @@ public class UserDetailsImpl implements UserDetails {
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
+	}
+
+	public String getMobilenumber() {
+		return mobilenumber;
+	}
+
+	public void setMobilenumber(String mobilenumber) {
+		this.mobilenumber = mobilenumber;
 	}
 
 	@Override

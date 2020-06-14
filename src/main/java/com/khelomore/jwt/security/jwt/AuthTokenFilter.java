@@ -1,4 +1,4 @@
-package com.bezkoder.springjwt.security.jwt;
+package com.khelomore.jwt.security.jwt;
 
 import java.io.IOException;
 
@@ -17,7 +17,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.bezkoder.springjwt.security.services.UserDetailsServiceImpl;
+import com.khelomore.jwt.security.services.UserDetailsServiceImpl;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
 	@Autowired
@@ -34,9 +34,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 		try {
 			String jwt = parseJwt(request);
 			if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-				String username = jwtUtils.getUserNameFromJwtToken(jwt);
-
-				UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+//				String username = jwtUtils.getUserNameFromJwtToken(jwt);
+				String mobilenumber = jwtUtils.getUserNameFromJwtToken(jwt);
+ 
+				UserDetails userDetails = userDetailsService.loadUserByUsername(mobilenumber);
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 						userDetails, null, userDetails.getAuthorities());
 				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

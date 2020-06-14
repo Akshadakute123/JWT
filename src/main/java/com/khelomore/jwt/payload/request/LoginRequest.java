@@ -1,16 +1,23 @@
-package com.bezkoder.springjwt.payload.request;
+package com.khelomore.jwt.payload.request;
 
-import javax.validation.constraints.NotBlank;
 
 public class LoginRequest {
-	@NotBlank
+	
 	private String username;
-
-	@NotBlank
+   private String mobilenumber;
+	
 	private String password;
 
 	public String getUsername() {
 		return username;
+	}
+
+	public String getMobilenumber() {
+		return mobilenumber;
+	}
+
+	public void setMobilenumber(String mobilenumber) {
+		this.mobilenumber = mobilenumber;
 	}
 
 	public void setUsername(String username) {
